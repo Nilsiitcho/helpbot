@@ -13,9 +13,8 @@
 		</Console>
 
 		<!-- Rolling File Appender -->
-		<RollingFile name="FileAppender">
-<!-- 			filePattern="logs/helpcentersearchbot-%d{yyyy-MM-dd}-%i.log"> -->
-			filePattern="helpbot.log">
+		<RollingFile name="FileAppender"
+			filePattern="helpcentersearchbot.log">
 			<PatternLayout>
 				<Pattern>${LOG_PATTERN}</Pattern>
 			</PatternLayout>
