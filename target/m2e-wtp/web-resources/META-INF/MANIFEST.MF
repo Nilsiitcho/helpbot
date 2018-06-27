@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: helpbot
+Implementation-Version: 1.0.0-SNAPSHOT
+Built-By: nyson
+Implementation-Vendor-Id: org.helpbot
+Build-Jdk: 1.8.0_171
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/helpbot
+Created-By: Maven Integration for Eclipse
+
