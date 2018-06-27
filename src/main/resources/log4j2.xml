@@ -14,7 +14,7 @@
 
 		<!-- Rolling File Appender -->
 		<RollingFile name="FileAppender"
-			fileName="C:\\logs\\helpcentersearchrobot.log"
+			fileName="helpcentersearchbot.log"
 			filePattern="logs/helpcentersearchrobot{yyyy-MM-dd}-%i.log">
 			<PatternLayout>
 				<Pattern>${LOG_PATTERN}</Pattern>

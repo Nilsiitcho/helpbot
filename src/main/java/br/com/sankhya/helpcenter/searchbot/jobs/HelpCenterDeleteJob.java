@@ -49,7 +49,7 @@ public class HelpCenterDeleteJob {
 				logger.debug("ARTIGO EXCLUÍDO\n{\n id: " + id + "\n}");
 			}
 		}
-		logger.info("Comparaçã concluída!");
+		logger.info("Comparação entre bases de dados concluída!");
 	}
 
 	private void logResults() {
