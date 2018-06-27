@@ -16,8 +16,8 @@ public class HelpcenterRobot {
 
 	final Logger logger = LogManager.getLogger(HelpcenterRobot.class);
 
-	//@Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
-	@Scheduled(cron="*	50	16	?	*	*	*")
+	//@Scheduled(cron="0 7 17 * * MON-FRI")
+	@Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
 	public void executaTarefas() {
 		logger.info("Iniciando tarefa...");
 
