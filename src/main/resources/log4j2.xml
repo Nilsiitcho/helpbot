@@ -14,7 +14,7 @@
 
 		<!-- Rolling File Appender -->
 		<RollingFile name="FileAppender"
-			fileName="C:\\Developer\\logs\\helpcentersearchrobot.log"
+			fileName="C:\\logs\\helpcentersearchrobot.log"
 			filePattern="logs/helpcentersearchrobot{yyyy-MM-dd}-%i.log">
 			<PatternLayout>
 				<Pattern>${LOG_PATTERN}</Pattern>
@@ -22,7 +22,7 @@
 			<Policies>
 				<SizeBasedTriggeringPolicy size="5MB" />
 			</Policies>
-			<DefaultRolloverStrategy max="10" />
+			<DefaultRolloverStrategy max="10"/>
 		</RollingFile>
 
 	</Appenders>
