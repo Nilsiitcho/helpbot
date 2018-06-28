@@ -14,8 +14,8 @@
 
 		<!-- Rolling File Appender -->
 		<RollingFile name="FileAppender"
-			fileName="helpbot.log"
-			filePattern="log4j2-demo-%d{yyyy-MM-dd}-%i.log">
+			fileName="helpcentersearchrobot.log"
+			filePattern="logs/log4j2-demo-%d{yyyy-MM-dd}-%i.log">
 			<PatternLayout>
 				<Pattern>${LOG_PATTERN}</Pattern>
 			</PatternLayout>
