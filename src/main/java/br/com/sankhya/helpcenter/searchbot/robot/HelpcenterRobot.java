@@ -15,13 +15,11 @@ import br.com.sankhya.helpcenter.searchbot.utils.EmailSenderUtil;
 public class HelpcenterRobot {
 
 	final Logger logger = LogManager.getLogger(HelpcenterRobot.class);
- 
-//	@Scheduled(cron="0 0 21 * * MON-FRI")
-	//@Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
-	@Scheduled(cron="0 0 13 * * MON-FRI")
+
+//	@Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
+	@Scheduled(cron = "0 0 21 * * MON-FRI")
 	public void executaTarefas() {
 		logger.info("Iniciando tarefa...");
-//teste
 		try {
 
 			HelpCenterIndexJob helpIndex = new HelpCenterIndexJob();
