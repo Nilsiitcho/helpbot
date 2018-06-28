@@ -20,7 +20,7 @@ public class HelpcenterRobot {
 	@Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
 	public void executaTarefas() {
 		logger.info("Iniciando tarefa...");
-
+//teste
 		try {
 
 			HelpCenterIndexJob helpIndex = new HelpCenterIndexJob();
