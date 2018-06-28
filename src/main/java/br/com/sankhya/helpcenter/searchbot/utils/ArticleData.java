@@ -39,9 +39,6 @@ public class ArticleData {
 	@JsonProperty("helpcenter_url")
 	private String	link;
 
-	@JsonProperty("status")
-	private String	status;
-
 	private String	sectionName;
 
 	private String	sectionVisibility;
@@ -84,14 +81,6 @@ public class ArticleData {
 
 	public void setLink(String link) {
 		this.link = link;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public String getSectionName() {
@@ -185,7 +174,6 @@ public class ArticleData {
 			this.content = source.get("content").textValue();
 			this.link = source.get("helpcenter_url").textValue();
 
-			this.status = source.get("status").textValue();
 			this.sectionName = source.get("section_name").textValue();
 			this.sectionVisibility = source.get("section_visibility").textValue();
 
@@ -197,7 +185,7 @@ public class ArticleData {
 
 	@Override
 	public String toString() {
-		return "\n{\n id: " + this.getId() + ",\n title:" + this.getTitle() + ",\n content: " + this.getContent() + ",\n last_update:  " + this.getUpdatedAt() + ",\n link: " + this.getLink() + ",\n status: " + this.getStatus() + ",\n section_name: " + this.getSectionName() + ",\n section_visibility: " + this.getSectionVisibility() + ",\n elastic_id: " + this.getIdElastic() + "\n}";
+		return "\n{\n id: " + this.getId() + ",\n title:" + this.getTitle() + ",\n content: " + this.getContent() + ",\n last_update:  " + this.getUpdatedAt() + ",\n link: " + this.getLink() + ",\n section_name: " + this.getSectionName() + ",\n section_visibility: " + this.getSectionVisibility() + ",\n elastic_id: " + this.getIdElastic() + "\n}";
 	}
 
 }
