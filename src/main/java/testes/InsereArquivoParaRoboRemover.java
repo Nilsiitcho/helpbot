@@ -44,7 +44,6 @@ public class InsereArquivoParaRoboRemover{
 			
 			arquivoMAP.put("last_update", "2018-06-14T17:03:09.000Z");
 			arquivoMAP.put("helpcenter_url", "www-google-com-br");
-			arquivoMAP.put("status", "PUBLISHED");
 			arquivoMAP.put("section_name", "testes");
 			arquivoMAP.put("section_visibility", "PUBLIC");
 			request.source(arquivoMAP, XContentType.JSON);

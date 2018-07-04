@@ -147,14 +147,14 @@ public class ArticleData {
 
 	private static String formatContent(String text) {
 
-		text = text.replaceAll("&nbsp;", " ");
-		text = text.replaceAll("&gt", ">");
-		text = text.replaceAll("&quot;", "\"");
+		//text = text.replaceAll("&nbsp;", " ");
+		//text = text.replaceAll("&gt", ">");
+		//text = text.replaceAll("&quot;", "\"");
 		text = text.replaceAll("[\\\"\\]\\[\\}\\{\\\\•]", "");
 		text = text.replaceAll("\\\"\\w+", "“");
 		text = text.replaceAll("\\w+\\\"", "”");
-		text = text.replaceAll("\\,", "");
-		text = text.replaceAll("\\.", "");
+		//text = text.replaceAll("\\,", "");
+		//text = text.replaceAll("\\.", "");
 
 		return text;
 	}
