@@ -131,7 +131,8 @@ public class ArticleData {
 	@JsonProperty("contents")
 	private void unpackContentFromJson(ArrayList<JsonNode> contents) {
 		JsonNode jsonContent = contents.get(0);
-		String contentStringRaw = jsonContent.get("translation").textValue();
+		String contentStringRaw = jsonContent.get("translation").textValue()
+				.replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");;
 
 		this.content = contentStringRaw;
 
@@ -156,6 +157,7 @@ public class ArticleData {
 		text = text.replaceAll("[\\\"\\]\\[\\}\\{\\\\•]", " ");
 		text = text.replaceAll("\\\"\\w+", "“");
 		text = text.replaceAll("\\w+\\\"", "”");
+		text = text.replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");
 
 		return text;
 	}
