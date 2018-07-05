@@ -94,16 +94,17 @@ public class ElasticSearchClient {
 		}
 	}
 
-	public void index(ArticleData artigo, String id) {
+	public void index(ArticleData article, String id) {
 		try {
 
 			IndexRequest request = new IndexRequest("jiva", "helpcenter", id);
-			arquivoMAP.put("id", artigo.getId());
-			arquivoMAP.put("title", artigo.getTitle());
-			arquivoMAP.put("content", artigo.getContent());
-			arquivoMAP.put("last_update", artigo.getUpdatedAt());
-			arquivoMAP.put("helpcenter_url", artigo.getLink());
-			arquivoMAP.put("section_name", artigo.getSectionName());
+			arquivoMAP.put("id", article.getId());
+			arquivoMAP.put("title", article.getTitle());
+			arquivoMAP.put("content", article.getContent());
+			arquivoMAP.put("search_content", article.getSearchContent());
+			arquivoMAP.put("last_update", article.getUpdatedAt());
+			arquivoMAP.put("helpcenter_url", article.getLink());
+			arquivoMAP.put("section_name", article.getSectionName());
 			request.source(arquivoMAP, XContentType.JSON);
 			client.index(request).getResult();
 
@@ -125,6 +126,7 @@ public class ElasticSearchClient {
 			arquivoMAP.put("id", article.getId());
 			arquivoMAP.put("title", article.getTitle());
 			arquivoMAP.put("content", article.getContent());
+			arquivoMAP.put("search_content", article.getSearchContent());
 			arquivoMAP.put("last_update", article.getUpdatedAt());
 			arquivoMAP.put("helpcenter_url", article.getLink());
 			arquivoMAP.put("section_name", article.getSectionName());

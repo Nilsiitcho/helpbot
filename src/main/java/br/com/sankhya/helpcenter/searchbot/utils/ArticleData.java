@@ -16,32 +16,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
 //TODO: apagar campos desnecessários
+//TODO: configurar jsoup para deixar as tags necessárias
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArticleData {
 
-	private static DateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private static DateFormat	yyyyMMddHHmmss	= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	static {
 		yyyyMMddHHmmss.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 
 	@JsonProperty("id")
-	private Integer	id;
+	private Integer				id;
 
 	@JsonProperty("_id")
-	private String	idElastic;
+	private String				idElastic;
 
-	private String	title;
-	private String	content;
+	private String				title;
+	private String				content;
 
-	private Date	updatedAt;
+	private String				searchContent;
+
+	private Date				updatedAt;
 
 	@JsonProperty("helpcenter_url")
-	private String	link;
+	private String				link;
 
-	private String	sectionName;
-
-	private String	sectionVisibility;
+	private String				sectionName;
 
 	public Integer getId() {
 		return id;
@@ -67,6 +68,14 @@ public class ArticleData {
 		this.content = content;
 	}
 
+	public String getSearchContent() {
+		return searchContent;
+	}
+
+	public void setSearchContent(String searchContent) {
+		this.searchContent = searchContent;
+	}
+
 	public Date getUpdatedAt() {
 		return updatedAt;
 	}
@@ -89,14 +98,6 @@ public class ArticleData {
 
 	public void setSectionName(String sectionName) {
 		this.sectionName = sectionName;
-	}
-
-	public String getSectionVisibility() {
-		return sectionVisibility;
-	}
-
-	public void setSectionVisibility(String visibility) {
-		this.sectionVisibility = visibility;
 	}
 
 	public String getIdElastic() {
@@ -125,36 +126,36 @@ public class ArticleData {
 		String sourceSectionName = json.get(0).get("translation").textValue();
 
 		this.sectionName = sourceSectionName.replaceAll(" ", "-").toLowerCase();
-		this.sectionVisibility = section.get("visibility").textValue();
 	}
 
 	@JsonProperty("contents")
 	private void unpackContentFromJson(ArrayList<JsonNode> contents) {
 		JsonNode jsonContent = contents.get(0);
 		String contentStringRaw = jsonContent.get("translation").textValue();
+
+		this.content = contentStringRaw;
+
 		Document contentRaw = Jsoup.parse(contentStringRaw, "UTF-8");
-
 		Elements contentElements = contentRaw.select("body p");
-
 		StringBuilder contentBuffer = new StringBuilder();
 
 		contentElements.forEach(e -> {
 			contentBuffer.append(e.text());
 		});
 
-		this.content = formatContent(contentBuffer.toString());
+		this.searchContent = formatSearchContent(contentBuffer.toString());
 	}
 
-	private static String formatContent(String text) {
+	private static String formatSearchContent(String text) {
 
 		//text = text.replaceAll("&nbsp;", " ");
 		//text = text.replaceAll("&gt", ">");
 		//text = text.replaceAll("&quot;", "\"");
+		//text = text.replaceAll("\\,", "");
+		//text = text.replaceAll("\\.", "");
 		text = text.replaceAll("[\\\"\\]\\[\\}\\{\\\\•]", "");
 		text = text.replaceAll("\\\"\\w+", "“");
 		text = text.replaceAll("\\w+\\\"", "”");
-		//text = text.replaceAll("\\,", "");
-		//text = text.replaceAll("\\.", "");
 
 		return text;
 	}
@@ -172,20 +173,18 @@ public class ArticleData {
 			this.id = source.get("id").asInt();
 			this.title = source.get("title").textValue();
 			this.content = source.get("content").textValue();
+			this.searchContent = source.get("search_content").textValue();
 			this.link = source.get("helpcenter_url").textValue();
-
 			this.sectionName = source.get("section_name").textValue();
-			this.sectionVisibility = source.get("section_visibility").textValue();
 
 			String dataString = source.get("last_update").textValue().replaceAll("\\.000Z", "");
-
 			this.updatedAt = yyyyMMddHHmmss.parse(dataString);
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "\n{\n id: " + this.getId() + ",\n title:" + this.getTitle() + ",\n content: " + this.getContent() + ",\n last_update:  " + this.getUpdatedAt() + ",\n link: " + this.getLink() + ",\n section_name: " + this.getSectionName() + ",\n section_visibility: " + this.getSectionVisibility() + ",\n elastic_id: " + this.getIdElastic() + "\n}";
+		return "\n{\n id: " + this.getId() + ",\n title:" + this.getTitle() + ",\n content: " + this.getContent() + ",\n last_update:  " + this.getUpdatedAt() + ",\n link: " + this.getLink() + ",\n section_name: " + this.getSectionName() + ",\n elastic_id: " + this.getIdElastic() + "\n}";
 	}
 
 }
