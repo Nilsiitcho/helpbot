@@ -48,6 +48,9 @@ public class ArticleData {
 	@JsonProperty("upvote_count")
 	private Integer				upvoteCount;
 
+	@JsonProperty("keywords")
+	private String				keywords;
+
 	private String				sectionName;
 
 	public Integer getId() {
@@ -128,6 +131,14 @@ public class ArticleData {
 
 	public void setUpvoteCount(Integer upvoteCount) {
 		this.upvoteCount = upvoteCount;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
 	}
 
 	@JsonProperty("updated_at")

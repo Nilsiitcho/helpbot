@@ -42,12 +42,12 @@ import br.com.sankhya.helpcenter.searchbot.utils.ModelDataUtil.ResponseType;
 
 public class ElasticSearchClient {
 
-	private static final String	ESENDPOINT		= "https://search-jiva-k5qrjushn4sgnqers2tkxvsoh4.us-east-1.es.amazonaws.com";
-	private static final String	SERVICENAME		= "es";
-	private static final String	REGION			= "us-east-1";
-	private static final String	ELASTICURL		= ESENDPOINT + "/jiva/helpcenter/_search?&size=10000";
+	private static final String					ESENDPOINT			= "https://search-jiva-k5qrjushn4sgnqers2tkxvsoh4.us-east-1.es.amazonaws.com";
+	private static final String					SERVICENAME			= "es";
+	private static final String					REGION				= "us-east-1";
+	private static final String					ELASTICURL			= ESENDPOINT + "/jiva/helpcenter/_search?&size=10000";
 
-	private static DateFormat	yyyyMMddHHmmss	= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private static DateFormat					yyyyMMddHHmmss		= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	static {
 		yyyyMMddHHmmss.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -107,7 +107,8 @@ public class ElasticSearchClient {
 			arquivoMAP.put("section_name", article.getSectionName());
 			arquivoMAP.put("views", article.getViews());
 			arquivoMAP.put("upvote_count", article.getUpvoteCount());
-			
+			arquivoMAP.put("keywords", article.getKeywords());
+
 			request.source(arquivoMAP, XContentType.JSON);
 			client.index(request).getResult();
 
@@ -135,6 +136,7 @@ public class ElasticSearchClient {
 			arquivoMAP.put("section_name", article.getSectionName());
 			arquivoMAP.put("views", article.getViews());
 			arquivoMAP.put("upvote_count", article.getUpvoteCount());
+			arquivoMAP.put("keywords", article.getKeywords());
 			request.doc(arquivoMAP, XContentType.JSON);
 			client.update(request);
 
