@@ -31,7 +31,7 @@ public class KayakoClient {
 	private static final String	APIURL					= "https://jiva.kayako.com/api/v1";
 	private static final String	CATEGORYURL				= APIURL + "/categories?include=*&fields=id&limit=100";
 	private static final String	SECTIONSURL				= APIURL + "/sections.json?include=*&limit=100&fields=id,visibility&category_ids=";
-	private static final String	ARTICLEURL				= APIURL + "/articles.json?include=*&filter=PUBLISHED&limit=10000&fields=id,titles,contents,updated_at,helpcenter_url,status,section&section_id=";
+	private static final String	ARTICLEURL				= APIURL + "/articles.json?include=*&filter=PUBLISHED&limit=10000&fields=id,titles,contents,updated_at,helpcenter_url,status,section,upvote_count,views&section_id=";
 	private static final String	ARTICLEIDANDLASTUPDATE	= APIURL + "/articles.json?filter=PUBLISHED&limit=10000&fields=id,updated_at&section_id=";
 	private static final String	ARTICLEID				= APIURL + "/articles.json?filter=PUBLISHED&limit=10000&fields=id&section_id=";
 

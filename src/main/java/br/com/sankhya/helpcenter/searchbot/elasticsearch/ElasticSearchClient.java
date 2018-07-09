@@ -105,6 +105,9 @@ public class ElasticSearchClient {
 			arquivoMAP.put("last_update", article.getUpdatedAt());
 			arquivoMAP.put("helpcenter_url", article.getLink());
 			arquivoMAP.put("section_name", article.getSectionName());
+			arquivoMAP.put("views", article.getViews());
+			arquivoMAP.put("upvote_count", article.getUpvoteCount());
+			
 			request.source(arquivoMAP, XContentType.JSON);
 			client.index(request).getResult();
 
@@ -130,6 +133,8 @@ public class ElasticSearchClient {
 			arquivoMAP.put("last_update", article.getUpdatedAt());
 			arquivoMAP.put("helpcenter_url", article.getLink());
 			arquivoMAP.put("section_name", article.getSectionName());
+			arquivoMAP.put("views", article.getViews());
+			arquivoMAP.put("upvote_count", article.getUpvoteCount());
 			request.doc(arquivoMAP, XContentType.JSON);
 			client.update(request);
 

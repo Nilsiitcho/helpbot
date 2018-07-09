@@ -42,6 +42,12 @@ public class ArticleData {
 	@JsonProperty("helpcenter_url")
 	private String				link;
 
+	@JsonProperty("views")
+	private Integer				views;
+
+	@JsonProperty("upvote_count")
+	private Integer				upvoteCount;
+
 	private String				sectionName;
 
 	public Integer getId() {
@@ -108,6 +114,22 @@ public class ArticleData {
 		this.idElastic = idElastic;
 	}
 
+	public Integer getViews() {
+		return views;
+	}
+
+	public void setViews(Integer views) {
+		this.views = views;
+	}
+
+	public Integer getUpvoteCount() {
+		return upvoteCount;
+	}
+
+	public void setUpvoteCount(Integer upvoteCount) {
+		this.upvoteCount = upvoteCount;
+	}
+
 	@JsonProperty("updated_at")
 	private void formatDate(String dataString) throws ParseException {
 		dataString = dataString.replaceAll("\\+00:00", "");
@@ -117,7 +139,7 @@ public class ArticleData {
 	@JsonProperty("titles")
 	private void unpackTitleFromJson(ArrayList<JsonNode> titles) {
 		JsonNode jsonTitle = titles.get(0);
-		this.title = jsonTitle.get("translation").textValue();
+		this.title = jsonTitle.get("translation").textValue().replaceAll("\\\"", "'");
 	}
 
 	@JsonProperty("section")
@@ -131,8 +153,7 @@ public class ArticleData {
 	@JsonProperty("contents")
 	private void unpackContentFromJson(ArrayList<JsonNode> contents) {
 		JsonNode jsonContent = contents.get(0);
-		String contentStringRaw = jsonContent.get("translation").textValue()
-				.replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");;
+		String contentStringRaw = jsonContent.get("translation").textValue().replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");;
 
 		this.content = contentStringRaw;
 
@@ -155,8 +176,7 @@ public class ArticleData {
 		//text = text.replaceAll("\\,", "");
 		//text = text.replaceAll("\\.", "");
 		text = text.replaceAll("[\\\"\\]\\[\\}\\{\\\\•]", " ");
-		text = text.replaceAll("\\\"\\w+", "“");
-		text = text.replaceAll("\\w+\\\"", "”");
+		text = text.replaceAll("\\\"", "'");
 		text = text.replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");
 
 		return text;
