@@ -32,6 +32,7 @@ public class KayakoClient {
 	private static final String	CATEGORYURL				= APIURL + "/categories?include=*&fields=id&limit=100";
 	private static final String	SECTIONSURL				= APIURL + "/sections.json?include=*&limit=100&fields=id,visibility&category_ids=";
 	private static final String	ARTICLEURL				= APIURL + "/articles.json?include=*&filter=PUBLISHED&limit=10000&fields=id,titles,contents,updated_at,helpcenter_url,keywords,status,section,upvote_count,views&section_id=";
+	private static final String	ARTICLEVIEWSURL			= APIURL + "/articles.json?include=*&filter=PUBLISHED&limit=10000&fields=id,upvote_count,views&section_id=";
 	private static final String	ARTICLEIDANDLASTUPDATE	= APIURL + "/articles.json?filter=PUBLISHED&limit=10000&fields=id,updated_at&section_id=";
 	private static final String	ARTICLEID				= APIURL + "/articles.json?filter=PUBLISHED&limit=10000&fields=id&section_id=";
 
@@ -78,7 +79,7 @@ public class KayakoClient {
 		}
 		throw new ClientProtocolException("Unexpected response status: " + status);
 	}
-	
+
 	private List<Integer> processIdListOfSections(HttpResponse response) throws IOException {
 		if (response == null) {
 			IllegalArgumentException e = new IllegalArgumentException("Reponse nao pode ser nulo.");
@@ -98,7 +99,7 @@ public class KayakoClient {
 
 			data.forEach(c -> {
 				String visibility = c.get("visibility").textValue();
-				if(visibility.equals("PUBLIC")) {
+				if (visibility.equals("PUBLIC")) {
 					ids.add(c.get("id").asInt());
 				}
 			});
@@ -106,7 +107,6 @@ public class KayakoClient {
 		}
 		throw new ClientProtocolException("Unexpected response status: " + status);
 	}
-	
 
 	public List<ArticleData> getArticles(Integer sectionId) throws IOException {
 		if (sectionId == null) {
@@ -147,7 +147,7 @@ public class KayakoClient {
 	public HashMap<Integer, Date> getIdAndDateOfUpdatedArticles() throws IOException {
 		HashMap<Integer, Date> idsAndDatesBySection = new HashMap<>();
 		HashMap<Integer, Date> updatedIdsAndDates = new HashMap<>();
-		
+
 		DateTime yesterday = new DateTime(new DateTime().minusDays(2));
 
 		for (Integer sectionId : getAllSectionIds()) {
@@ -224,5 +224,31 @@ public class KayakoClient {
 
 	public void closeClient() throws IOException {
 		httpclient.close();
+	}
+
+	public List<ArticleData> getAllArticlesViewsAndUpvote() throws IOException {
+
+		List<ArticleData> viewsAndUpvote = new ArrayList<>();
+		List<Integer> sectionIds = getAllSectionIds();
+		
+		for (Integer id : sectionIds) {
+			viewsAndUpvote.addAll(getArticlesViewsAndUpvote(id));
+		}
+		
+		return viewsAndUpvote;
+	}
+
+	public List<ArticleData> getArticlesViewsAndUpvote(Integer sectionId) throws IOException {
+		if (sectionId == null) {
+			IllegalArgumentException e = new IllegalArgumentException("Section ID nao pode ser nulo.");
+			logger.error("[getArticles] - Não foi possíverl pegar os artigos do Kayako. Causa: ", e);
+			EmailSenderUtil.reportErrorViaEmail(e.getMessage());
+		}
+
+		String url = (ARTICLEVIEWSURL + sectionId);
+		HttpGet httpGet = new HttpGet(url);
+		httpGet.addHeader("Content-Type", "application/json");
+
+		return ModelDataUtil.convertToArticleData(httpclient.execute(httpGet), ResponseType.KAYAKO);
 	}
 }

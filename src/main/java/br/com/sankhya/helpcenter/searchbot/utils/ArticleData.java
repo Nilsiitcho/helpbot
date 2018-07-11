@@ -15,8 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
-//TODO: apagar campos desnecessários
-//TODO: configurar jsoup para deixar as tags necessárias
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArticleData {
 
@@ -33,7 +31,6 @@ public class ArticleData {
 	private String				idElastic;
 
 	private String				title;
-	private String				content;
 
 	private String				searchContent;
 
@@ -67,14 +64,6 @@ public class ArticleData {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
 	}
 
 	public String getSearchContent() {
@@ -166,8 +155,6 @@ public class ArticleData {
 		JsonNode jsonContent = contents.get(0);
 		String contentStringRaw = jsonContent.get("translation").textValue().replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");;
 
-		this.content = contentStringRaw;
-
 		Document contentRaw = Jsoup.parse(contentStringRaw, "UTF-8");
 		Elements contentElements = contentRaw.select("body p");
 		StringBuilder contentBuffer = new StringBuilder();
@@ -180,12 +167,6 @@ public class ArticleData {
 	}
 
 	private static String formatSearchContent(String text) {
-
-		//text = text.replaceAll("&nbsp;", " ");
-		//text = text.replaceAll("&gt", ">");
-		//text = text.replaceAll("&quot;", "\"");
-		//text = text.replaceAll("\\,", "");
-		//text = text.replaceAll("\\.", "");
 		text = text.replaceAll("[\\\"\\]\\[\\}\\{\\\\•]", " ");
 		text = text.replaceAll("\\\"", "'");
 		text = text.replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");
@@ -205,7 +186,6 @@ public class ArticleData {
 		if (source != null) {
 			this.id = source.get("id").asInt();
 			this.title = source.get("title").textValue();
-			this.content = source.get("content").textValue();
 			this.searchContent = source.get("search_content").textValue();
 			this.link = source.get("helpcenter_url").textValue();
 			this.sectionName = source.get("section_name").textValue();
@@ -217,7 +197,7 @@ public class ArticleData {
 
 	@Override
 	public String toString() {
-		return "\n{\n id: " + this.getId() + ",\n title:" + this.getTitle() + ",\n content: " + this.getContent() + ",\n last_update:  " + this.getUpdatedAt() + ",\n link: " + this.getLink() + ",\n section_name: " + this.getSectionName() + ",\n elastic_id: " + this.getIdElastic() + "\n}";
+		return "\n{\n id: " + this.getId() + ",\n title:" + this.getTitle() + ",\n last_update:  " + this.getUpdatedAt() + ",\n link: " + this.getLink() + ",\n section_name: " + this.getSectionName() + ",\n elastic_id: " + this.getIdElastic() + "\n}";
 	}
 
 }

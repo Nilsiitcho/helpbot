@@ -100,7 +100,6 @@ public class ElasticSearchClient {
 			IndexRequest request = new IndexRequest("jiva", "helpcenter", id);
 			arquivoMAP.put("id", article.getId());
 			arquivoMAP.put("title", article.getTitle());
-			arquivoMAP.put("content", article.getContent());
 			arquivoMAP.put("search_content", article.getSearchContent());
 			arquivoMAP.put("last_update", article.getUpdatedAt());
 			arquivoMAP.put("helpcenter_url", article.getLink());
@@ -108,6 +107,13 @@ public class ElasticSearchClient {
 			arquivoMAP.put("views", article.getViews());
 			arquivoMAP.put("upvote_count", article.getUpvoteCount());
 			arquivoMAP.put("keywords", article.getKeywords());
+
+			String searchContent = article.getSearchContent();
+
+			if (searchContent != null) {
+				searchContent = (searchContent.length() > 200) ? searchContent.substring(0, 200).concat("...") : searchContent;
+				arquivoMAP.put("summary", searchContent);
+			}
 
 			request.source(arquivoMAP, XContentType.JSON);
 			client.index(request).getResult();
@@ -129,7 +135,6 @@ public class ElasticSearchClient {
 
 			arquivoMAP.put("id", article.getId());
 			arquivoMAP.put("title", article.getTitle());
-			arquivoMAP.put("content", article.getContent());
 			arquivoMAP.put("search_content", article.getSearchContent());
 			arquivoMAP.put("last_update", article.getUpdatedAt());
 			arquivoMAP.put("helpcenter_url", article.getLink());
@@ -137,6 +142,14 @@ public class ElasticSearchClient {
 			arquivoMAP.put("views", article.getViews());
 			arquivoMAP.put("upvote_count", article.getUpvoteCount());
 			arquivoMAP.put("keywords", article.getKeywords());
+
+			String searchContent = article.getSearchContent();
+
+			if (searchContent != null) {
+				searchContent = (searchContent.length() > 200) ? searchContent.substring(0, 200).concat("...") : searchContent;
+				arquivoMAP.put("summary", searchContent);
+			}
+
 			request.doc(arquivoMAP, XContentType.JSON);
 			client.update(request);
 
@@ -216,6 +229,55 @@ public class ElasticSearchClient {
 			return ids;
 		} else {
 			throw new ClientProtocolException("[ElasticSearchClient: getDateFromArticleToCompare] - Status inesperado: " + status);
+		}
+	}
+	
+	public List<ArticleData> getAllViewsAndUpvotes() throws ClientProtocolException, IOException {
+
+		String url = ESENDPOINT + "/jiva/helpcenter/_search?_source_include=.id,views,upvote_count&size=10000";
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		HttpGet httpGet = new HttpGet(url);
+		httpGet.addHeader("Content-Type", "application/json");
+
+		CloseableHttpResponse response = httpclient.execute(httpGet);
+		int status = response.getStatusLine().getStatusCode();
+
+		if (status >= 200 && status < 300) {
+			List<ArticleData> articlesList = new ArrayList<>();
+
+			String responseBody = EntityUtils.toString(response.getEntity());
+
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode data = mapper.readTree(responseBody).path("hits").path("hits");
+
+			data.forEach(hit -> {
+				ArticleData article = new ArticleData();
+				article.setId(hit.get("_id").asInt());
+				article.setViews(hit.get("_source").get("views").asInt());
+				article.setUpvoteCount(hit.get("_source").get("upvote_count").asInt());
+				articlesList.add(article);
+			});
+
+			return articlesList;
+		} else {
+			throw new ClientProtocolException("[ElasticSearchClient: getDateFromArticleToCompare] - Status inesperado: " + status);
+		}
+	}
+
+	public void upDateViews(Integer id, Integer views, Integer upvoteCount) throws IOException {
+
+		if (id != null) {
+			UpdateRequest request = new UpdateRequest("jiva", "helpcenter", id.toString());
+
+			arquivoMAP.put("id", id);
+			arquivoMAP.put("views", views);
+			arquivoMAP.put("upvote_count", upvoteCount);
+
+			request.doc(arquivoMAP, XContentType.JSON);
+			client.update(request);
+
+		} else {
+			logger.error("[ElasticSearchClient: updateArticle] - Id do artigo não foi especificado!");
 		}
 	}
 }

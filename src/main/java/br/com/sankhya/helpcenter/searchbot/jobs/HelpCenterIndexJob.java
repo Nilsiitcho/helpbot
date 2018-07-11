@@ -1,4 +1,3 @@
-
 package br.com.sankhya.helpcenter.searchbot.jobs;
 
 import java.io.IOException;
@@ -39,11 +38,31 @@ public class HelpCenterIndexJob {
 			if (!newAndUpdatedArticlesIds.isEmpty()) {
 				indexWhenElasticIsNotEmpty(newAndUpdatedArticlesIds);
 			}
-			logger.info("Verificação concluída!");
+			logger.info("Atualizando a quantidade de views e upvote_count!");
+			List<ArticleData> viewsAndUpvotes = kayakoClient.getAllArticlesViewsAndUpvote();
+			if (viewsAndUpvotes != null && !viewsAndUpvotes.isEmpty()) {
+				updateViewsAndUpVotes(viewsAndUpvotes);
+			}
 		}
 
 		kayakoClient.closeClient();
 		logResults();
+	}
+
+	private void updateViewsAndUpVotes(List<ArticleData> viewsAndUpVotes) throws Exception {
+		ElasticSearchClient elasticClient = new ElasticSearchClient();
+		List<ArticleData> elasticArticles = elasticClient.getAllViewsAndUpvotes();
+
+		for (ArticleData kayako : viewsAndUpVotes) {
+			for (ArticleData elastic : elasticArticles) {
+				if (kayako.getId().equals(elastic.getId())) {
+					if (!kayako.getViews().equals(elastic.getViews()) || !kayako.getUpvoteCount().equals(elastic.getUpvoteCount())) {
+						elasticClient.upDateViews(kayako.getId(), kayako.getViews(), kayako.getUpvoteCount());
+					}
+				}
+			}
+		}
+
 	}
 
 	private void indexWhenElasticIsNotEmpty(HashMap<Integer, Date> newArticles) throws ClientProtocolException, IOException, Exception {
