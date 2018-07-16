@@ -139,7 +139,7 @@ public class ElasticSearchClient {
 			arquivoMAP.put("last_update", article.getUpdatedAt());
 			arquivoMAP.put("helpcenter_url", article.getLink());
 			arquivoMAP.put("section_name", article.getSectionName());
-			arquivoMAP.put("views", article.getViews());
+//			arquivoMAP.put("views", article.getViews());
 			arquivoMAP.put("upvote_count", article.getUpvoteCount());
 			arquivoMAP.put("keywords", article.getKeywords());
 

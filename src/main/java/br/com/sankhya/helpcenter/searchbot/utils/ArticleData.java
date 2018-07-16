@@ -153,7 +153,7 @@ public class ArticleData {
 	@JsonProperty("contents")
 	private void unpackContentFromJson(ArrayList<JsonNode> contents) {
 		JsonNode jsonContent = contents.get(0);
-		String contentStringRaw = jsonContent.get("translation").textValue().replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");;
+		String contentStringRaw = jsonContent.get("translation").textValue().replaceAll("A última edição deste tópico foi na[\\s+]\\D+[\\d+\\/*]+,\\s+\\D+[\\d{2}:\\d{2}:\\d{2}]+ \\DM", "");
 
 		Document contentRaw = Jsoup.parse(contentStringRaw, "UTF-8");
 		Elements contentElements = contentRaw.select("body p");

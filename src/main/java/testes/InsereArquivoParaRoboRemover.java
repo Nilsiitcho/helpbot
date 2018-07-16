@@ -19,35 +19,34 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import br.com.sankhya.helpcenter.searchbot.utils.AWSRequestSigningApacheInterceptor;
 
-public class InsereArquivoParaRoboRemover{
+public class InsereArquivoParaRoboRemover {
 	private static String				serviceName			= "es";
 	private static String				region				= "us-east-1";
 	private static String				aesEndpoint			= "https://search-jiva-k5qrjushn4sgnqers2tkxvsoh4.us-east-1.es.amazonaws.com";
 
 	static final AWSCredentialsProvider	credentialsProvider	= new DefaultAWSCredentialsProviderChain();
-	
-	private static Map<String, Object>	arquivoMAP	= new HashMap<>();
-	private static RestHighLevelClient client = buildClient(serviceName, region);
-	
+
+	private static Map<String, Object>	arquivoMAP			= new HashMap<>();
+	private static RestHighLevelClient	client				= buildClient(serviceName, region);
+
 	public static void main(String[] args) throws IOException {
 
 		index();
 	}
-	
+
 	private static void index() {
 		try {
-			
+
 			IndexRequest request = new IndexRequest("jiva", "helpcenter", "9999");
 			arquivoMAP.put("id", "9999");
 			arquivoMAP.put("title", "Teste de inserção");
-			arquivoMAP.put("content", "Testando a inserção de artigos no Amazon ElasticSearch Service");
-			
+			arquivoMAP.put("content", "");
 			arquivoMAP.put("last_update", "2018-06-14T17:03:09.000Z");
 			arquivoMAP.put("helpcenter_url", "www-google-com-br");
 			arquivoMAP.put("section_name", "testes");
 			arquivoMAP.put("section_visibility", "PUBLIC");
 			request.source(arquivoMAP, XContentType.JSON);
-			
+
 			client.index(request);
 			System.out.println("ARTIGO INDEXADO\n{\n id: 9999 ,\n title: Teste de inserção\n}");
 

@@ -37,11 +37,13 @@ public class HelpCenterIndexJob {
 			HashMap<Integer, Date> newAndUpdatedArticlesIds = kayakoClient.getIdAndDateOfUpdatedArticles();
 			if (!newAndUpdatedArticlesIds.isEmpty()) {
 				indexWhenElasticIsNotEmpty(newAndUpdatedArticlesIds);
-			}
-			logger.info("Atualizando a quantidade de views e upvote_count!");
-			List<ArticleData> viewsAndUpvotes = kayakoClient.getAllArticlesViewsAndUpvote();
-			if (viewsAndUpvotes != null && !viewsAndUpvotes.isEmpty()) {
-				updateViewsAndUpVotes(viewsAndUpvotes);
+				
+			//As views vão são baseadas na base de dados do ElasticSearch e não do Kayako.	
+//				logger.info("Atualizando a quantidade de views e upvote_count!");
+//				List<ArticleData> viewsAndUpvotes = kayakoClient.getAllArticlesViewsAndUpvote();
+//				if (viewsAndUpvotes != null && !viewsAndUpvotes.isEmpty()) {
+//					updateViewsAndUpVotes(viewsAndUpvotes);
+//				}
 			}
 		}
 
@@ -49,21 +51,21 @@ public class HelpCenterIndexJob {
 		logResults();
 	}
 
-	private void updateViewsAndUpVotes(List<ArticleData> viewsAndUpVotes) throws Exception {
-		ElasticSearchClient elasticClient = new ElasticSearchClient();
-		List<ArticleData> elasticArticles = elasticClient.getAllViewsAndUpvotes();
-
-		for (ArticleData kayako : viewsAndUpVotes) {
-			for (ArticleData elastic : elasticArticles) {
-				if (kayako.getId().equals(elastic.getId())) {
-					if (!kayako.getViews().equals(elastic.getViews()) || !kayako.getUpvoteCount().equals(elastic.getUpvoteCount())) {
-						elasticClient.upDateViews(kayako.getId(), kayako.getViews(), kayako.getUpvoteCount());
-					}
-				}
-			}
-		}
-
-	}
+//	private void updateViewsAndUpVotes(List<ArticleData> viewsAndUpVotes) throws Exception {
+//		ElasticSearchClient elasticClient = new ElasticSearchClient();
+//		List<ArticleData> elasticArticles = elasticClient.getAllViewsAndUpvotes();
+//
+//		for (ArticleData kayako : viewsAndUpVotes) {
+//			for (ArticleData elastic : elasticArticles) {
+//				if (kayako.getId().equals(elastic.getId())) {
+//					if (!kayako.getViews().equals(elastic.getViews()) || !kayako.getUpvoteCount().equals(elastic.getUpvoteCount())) {
+//						elasticClient.upDateViews(kayako.getId(), kayako.getViews(), kayako.getUpvoteCount());
+//					}
+//				}
+//			}
+//		}
+//
+//	}
 
 	private void indexWhenElasticIsNotEmpty(HashMap<Integer, Date> newArticles) throws ClientProtocolException, IOException, Exception {
 		ElasticSearchClient elasticSearchClient = new ElasticSearchClient();
