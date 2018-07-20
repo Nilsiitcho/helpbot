@@ -15,6 +15,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
+/**
+ * 
+ * @author Nilson Neto
+ * 
+ * Classe modelo, responsavel por tratar os dados dos artigos, tanto no Kayako, quanto no ElasticSearch.
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArticleData {
 

@@ -18,9 +18,16 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * 
+ * @author Nilson Neto
+ * 
+ * Classe utilitaria para auxiliar na conversao do JSON para o ArticleData.
+ *
+ */
 public class ModelDataUtil {
 
-	private static DateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private static DateFormat	yyyyMMddHHmmss	= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	static {
 		yyyyMMddHHmmss.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -30,7 +37,7 @@ public class ModelDataUtil {
 		KAYAKO, ELASTIC_SEARCH
 	}
 
-	private final static Logger logger = LogManager.getLogger(ModelDataUtil.class);
+	private final static Logger	logger	= LogManager.getLogger(ModelDataUtil.class);
 
 	public static List<ArticleData> convertToArticleData(HttpResponse response, ResponseType type) throws IOException {
 
@@ -55,14 +62,13 @@ public class ModelDataUtil {
 
 	}
 
-	public static Date convertData(String dataString) {
-
+	public static Date convertDate(String dataString) {
 		Date dataDeAtualização = new Date();
 		try {
 			dataDeAtualização = yyyyMMddHHmmss.parse(dataString);
 		} catch (java.text.ParseException e) {
 			logger.error("Não foipossível pegar os artigos do ElasticSearch. Causa: ", e);
-			EmailSenderUtil.reportErrorViaEmail(e.getMessage());
+			EmailSenderUtil.sendEmail(e.getMessage());
 		}
 		return dataDeAtualização;
 	}

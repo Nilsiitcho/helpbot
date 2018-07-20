@@ -16,6 +16,15 @@ import org.apache.logging.log4j.Logger;
 
 import br.com.sankhya.helpcenter.searchbot.robot.HelpcenterRobot;
 
+/**
+ * 
+ * 
+ * @author Nilson Neto
+ * 
+ * Classe responsavel por realizar o envio de email para equipe em caso de erro
+ * na execucao do programa.
+ *
+ */
 public class EmailSenderUtil {
 
 	final static Logger logger = LogManager.getLogger(HelpcenterRobot.class);
@@ -46,7 +55,7 @@ public class EmailSenderUtil {
 		}
 	}
 
-	public static void reportErrorViaEmail(String content) {
+	public static void sendEmail(String content) {
 		final String fromEmail = "nilson.silva@Jiva.com.br";
 		final String password = "Luci@ne123";
 		final String toEmail = "nyson96@hotmail.com";

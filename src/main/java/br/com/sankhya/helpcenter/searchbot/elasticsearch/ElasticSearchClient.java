@@ -40,6 +40,14 @@ import br.com.sankhya.helpcenter.searchbot.utils.ArticleData;
 import br.com.sankhya.helpcenter.searchbot.utils.ModelDataUtil;
 import br.com.sankhya.helpcenter.searchbot.utils.ModelDataUtil.ResponseType;
 
+/**
+ * 
+ * @author Nilson Neto
+ * 
+ * Classe responsavel por fazer a comunicacao e as operacoes
+ * entre o sistema e o servidor do ElasticSearch.
+ *
+ */
 public class ElasticSearchClient {
 
 	private static final String					ESENDPOINT			= "https://search-jiva-k5qrjushn4sgnqers2tkxvsoh4.us-east-1.es.amazonaws.com";
@@ -59,6 +67,14 @@ public class ElasticSearchClient {
 	private static Map<String, Object>			arquivoMAP			= new HashMap<>();
 	private static RestHighLevelClient			client				= buildClient(SERVICENAME, REGION);
 
+	/**
+	 * 
+	 * Pega a quantidade total de artigos indexados no servidor do ElastiSearc.
+	 * 
+	 * @return Quantidade total de artigos
+	 * @throws ParseException
+	 * @throws IOException
+	 */
 	public Integer getTotalOfArticles() throws ParseException, IOException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -82,6 +98,13 @@ public class ElasticSearchClient {
 
 	}
 
+	/**
+	 * 
+	 * Pega todos os artigos indexados na base de dados do ElasticSearch.
+	 * 
+	 * @return Lista com todos os artigos.
+	 * @throws IOException
+	 */
 	public List<ArticleData> getAllArticles() throws IOException {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
@@ -94,7 +117,13 @@ public class ElasticSearchClient {
 		}
 	}
 
-	public void index(ArticleData article, String id) {
+	/**
+	 * Indexa o artigo recebido no ElasticSearch, tendo como ID o parametro informado.
+	 * 
+	 * @param article
+	 * @param id
+	 */
+	public void indexArticle(ArticleData article, String id) {
 		try {
 
 			IndexRequest request = new IndexRequest("jiva", "helpcenter", id);
@@ -123,11 +152,26 @@ public class ElasticSearchClient {
 		}
 	}
 
+	/**
+	 * 
+	 * Deleta do indice, caso exista, o artigo com o ID informado.
+	 * 
+	 * @param articleId
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	public void deleteArticle(String articleId) throws ClientProtocolException, IOException {
 		DeleteRequest delete = new DeleteRequest("jiva", "helpcenter", articleId);
 		client.delete(delete).getResult();
 	}
 
+	/**
+	 * Atualiza o artigo da base de dados do ElasticSearch que possui o Id informado como parametro.
+	 * 
+	 * @param article
+	 * @param id
+	 * @throws IOException
+	 */
 	public void updateArticle(ArticleData article, String id) throws IOException {
 
 		if (id != null) {
@@ -139,7 +183,6 @@ public class ElasticSearchClient {
 			arquivoMAP.put("last_update", article.getUpdatedAt());
 			arquivoMAP.put("helpcenter_url", article.getLink());
 			arquivoMAP.put("section_name", article.getSectionName());
-//			arquivoMAP.put("views", article.getViews());
 			arquivoMAP.put("upvote_count", article.getUpvoteCount());
 			arquivoMAP.put("keywords", article.getKeywords());
 
@@ -158,6 +201,15 @@ public class ElasticSearchClient {
 		}
 	}
 
+	/**
+	 * 
+	 * Metodo que cria e retorna uma instancia do Client para comunicacao com o servidor 
+	 * do ElasticSearch.
+	 * 
+	 * @param serviceName
+	 * @param region
+	 * @return Client EelasticSearch
+	 */
 	public static RestHighLevelClient buildClient(String serviceName, String region) {
 
 		AWS4Signer signer = new AWS4Signer();
@@ -169,7 +221,17 @@ public class ElasticSearchClient {
 		return new RestHighLevelClient(builder);
 	}
 
-	public Date getDateFromArticleToCompare(String id) throws ClientProtocolException, IOException, java.text.ParseException {
+	/**
+	 * 
+	 * Pega a data da ultima atualizacao do artigo com o id informado/
+	 * 
+	 * @param id
+	 * @return Data da ultima atualizacao.
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws java.text.ParseException
+	 */
+	public Date getDateFromArticle(String id) throws ClientProtocolException, IOException, java.text.ParseException {
 
 		String url = ESENDPOINT + "/jiva/helpcenter/" + id + "/?_source_include=last_update";
 
@@ -199,11 +261,22 @@ public class ElasticSearchClient {
 			} else
 				return null;
 
+		} else if (status >= 404) {
+			return null;
 		} else {
 			throw new ClientProtocolException("Status inesperado: " + status);
 		}
 	}
 
+	/**
+	 * 
+	 * Pega os IDs de todos os artigos indexados no ElasticSearch.
+	 * 
+	 * @return Lista com os IDs dos artigos.
+	 * 
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	public List<Integer> getAllIds() throws ClientProtocolException, IOException {
 
 		String url = ESENDPOINT + "/jiva/helpcenter/_search?_source_include=.id&size=10000";
@@ -231,7 +304,16 @@ public class ElasticSearchClient {
 			throw new ClientProtocolException("[ElasticSearchClient: getDateFromArticleToCompare] - Status inesperado: " + status);
 		}
 	}
-	
+
+	/**
+	 * 
+	 * Pega o numero de views e votos positivos de todos os artigos.
+	 * 
+	 * @return Lista com as views e votod positivos de cada artigo.
+	 * 
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	public List<ArticleData> getAllViewsAndUpvotes() throws ClientProtocolException, IOException {
 
 		String url = ESENDPOINT + "/jiva/helpcenter/_search?_source_include=.id,views,upvote_count&size=10000";
@@ -264,7 +346,16 @@ public class ElasticSearchClient {
 		}
 	}
 
-	public void upDateViews(Integer id, Integer views, Integer upvoteCount) throws IOException {
+	/**
+	 * 
+	 * Atualiza o numero de views e votos positivos de um determinado artigo.
+	 * 
+	 * @param id
+	 * @param views
+	 * @param upvoteCount
+	 * @throws IOException
+	 */
+	public void updateViewsAndUpvotes(Integer id, Integer views, Integer upvoteCount) throws IOException {
 
 		if (id != null) {
 			UpdateRequest request = new UpdateRequest("jiva", "helpcenter", id.toString());
