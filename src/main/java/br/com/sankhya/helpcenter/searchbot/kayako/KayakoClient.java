@@ -26,6 +26,14 @@ import br.com.sankhya.helpcenter.searchbot.utils.EmailSenderUtil;
 import br.com.sankhya.helpcenter.searchbot.utils.ModelDataUtil;
 import br.com.sankhya.helpcenter.searchbot.utils.ModelDataUtil.ResponseType;
 
+
+/**
+ * 
+ * @author Nilson Neto
+ * 
+ * Classe responsavel por realizar a comunicacao entre o sistema e a API do Kayako.
+ *
+ */
 public class KayakoClient {
 
 	private static final String	APIURL					= "https://jiva.kayako.com/api/v1";

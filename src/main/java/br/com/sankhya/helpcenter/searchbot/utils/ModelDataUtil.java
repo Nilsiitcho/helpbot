@@ -22,7 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * @author Nilson Neto
  * 
- * Classe utilitaria para auxiliar na conversao do JSON para o ArticleData.
+ * Classe utilitaria para auxiliar na conversao do JSON recebido
+ * pelas APIs do ElasticSearch e do Kibana, para a classe ArticleData.
  *
  */
 public class ModelDataUtil {
